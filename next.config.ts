@@ -62,6 +62,8 @@ const nextConfig: NextConfig = {
   },
   // Strict mode for React to catch potential issues
   reactStrictMode: true,
+  // Enable standalone output for Docker (required)
+  output: "standalone",
 };
 
 export default nextConfig;

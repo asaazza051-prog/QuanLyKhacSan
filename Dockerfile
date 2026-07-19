@@ -18,6 +18,9 @@ RUN npm ci --legacy-peer-deps
 FROM node:20-alpine AS builder
 WORKDIR /app
 
+# Update npm to match stage 1
+RUN npm install -g npm@latest
+
 COPY --from=deps /app/node_modules ./node_modules
 COPY . .
 

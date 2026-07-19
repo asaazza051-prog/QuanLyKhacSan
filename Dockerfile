@@ -1,21 +1,20 @@
 # =============================================
 # Stage 1: Install dependencies
 # =============================================
-FROM node:20-alpine AS deps
+FROM node:22-alpine AS deps
 RUN apk add --no-cache libc6-compat
 WORKDIR /app
 
-# Update npm to latest to avoid lockfile version mismatch
+# Update npm to latest (npm@12 requires Node >= 22)
 RUN npm install -g npm@latest
 
 COPY package.json package-lock.json* ./
-# Use --legacy-peer-deps to handle peer dependency conflicts
 RUN npm ci --legacy-peer-deps
 
 # =============================================
 # Stage 2: Build the Next.js application
 # =============================================
-FROM node:20-alpine AS builder
+FROM node:22-alpine AS builder
 WORKDIR /app
 
 # Update npm to match stage 1
@@ -32,7 +31,7 @@ RUN npm run build
 # =============================================
 # Stage 3: Production runner (lightweight)
 # =============================================
-FROM node:20-alpine AS runner
+FROM node:22-alpine AS runner
 WORKDIR /app
 
 ENV NODE_ENV=production

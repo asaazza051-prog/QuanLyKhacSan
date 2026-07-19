@@ -5,8 +5,12 @@ FROM node:20-alpine AS deps
 RUN apk add --no-cache libc6-compat
 WORKDIR /app
 
+# Update npm to latest to avoid lockfile version mismatch
+RUN npm install -g npm@latest
+
 COPY package.json package-lock.json* ./
-RUN npm ci
+# Use --legacy-peer-deps to handle peer dependency conflicts
+RUN npm ci --legacy-peer-deps
 
 # =============================================
 # Stage 2: Build the Next.js application
